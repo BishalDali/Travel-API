@@ -1,0 +1,213 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSchema'
+            examples:
+              example1:
+                summary: Example 1
+                value:
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@example.com
+                  password: password123
+                  role: user
+                  address:
+                    country: United States
+                    city: New York
+                    street: Street 1
+                    zip: '12345'
+              example2:
+                summary: Example 2
+                value:
+                  firstName: Jane
+                  lastName: Smith
+                  email: janesmith@example.com
+                  password: password456
+                  role: user
+                  address:
+                    country: Canada
+                    city: Toronto
+                    street: Street 2
+                    zip: '54321'
+      responses:
+        '201':
+          description: User registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                statusCode: 201
+                message: User registered successfully
+                data:
+                  id: 1
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@example.com
+                  role: user
+                  address:
+                    country: United States
+                    city: New York
+                    street: Street 1
+                    zip: '12345'
+        '400':
+          description: Invalid request body
+        '500':
+          description: Internal server error
+
+  /auth/login:
+    post:
+      summary: User login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginSchema'
+            example:
+              email: johndoe@example.com
+              password: password123
+      responses:
+        '200':
+          description: User login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              example:
+                message: User Logged In Successfully
+                data:
+                  user:
+                    id: 1
+                    firstName: John
+                    lastName: Doe
+                    email: johndoe@example.com
+                    role: user
+                    address:
+                      country: United States
+                      city: New York
+                      street: Street 1
+                      zip: '12345'
+                  token:
+                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+                    refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        '400':
+          description: Invalid request body
+        '401':
+          description: Unauthorized user
+        '500':
+          description: Internal server error
+
+  /auth/logout:
+    post:
+      summary: User logout
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: User logout successful
+          content:
+            application/json:
+              example:
+                message: User Logged Out Successfully
+        '401':
+          description: Unauthorized user
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    UserSchema:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+
+    Address:
+      type: object
+      properties:
+        country:
+          type: string
+        city:
+          type: string
+        street:
+          type: string
+        zip:
+          type: string
+
+    UserResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserData'
+
+    UserData:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+
+    LoginSchema:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserData'
+        token:
+          $ref: '#/components/schemas/Token'
+
+    Token:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
