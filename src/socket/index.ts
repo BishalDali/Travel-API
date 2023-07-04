@@ -14,7 +14,7 @@ interface Trip {
 export default function socketServer(server : HttpServer){
         const io = new Server(server, {
             cors: {
-                origin: "http://localhost:5173",
+                origin: "https://task-travel.netlify.app",
                 methods: ["GET", "POST"],
                 credentials: true
             },
